@@ -12,15 +12,18 @@ from typing import Annotated
 from sqlalchemy.orm import Session
 from starlette import status
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials, OAuth2PasswordBearer, OAuth2PasswordRequestForm
+from dotenv import load_dotenv
+import os
 
+load_dotenv()
 
 router = APIRouter(
     prefix="/auth",
     tags=["auth"],
 )
 
-SECRET_KEY = "985fa8bc6badb328bbc98de44e594927ca4c54f34a59428a70d6f6ab13daa864"
-ALGORITHM = "HS256"
+SECRET_KEY = os.getenv("SECRET_KEY")
+ALGORITHM = os.getenv("ALGORITHM")
 
 bcrypt_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
@@ -73,7 +76,7 @@ def create_access_token(email: str, user_id: int, expires_delta: timedelta, role
 
 # auth.py - add this function
 async def get_curr_user(token: Annotated[str, Depends(oauth2_bearer)]):
-    if token is None:                          # ← ADD THIS CHECK
+    if token is None:  # ← ADD THIS CHECK
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Not authenticated"

@@ -1,4 +1,4 @@
-from fastapi import APIRouter, HTTPException, Path
+from fastapi import APIRouter, HTTPException, Path, Query
 from starlette import status
 from database import SessionLocal
 from sqlalchemy.orm import Session
@@ -25,7 +25,23 @@ db_dependency = Annotated[Session, Depends(get_db)]
 
 @router.get("/", status_code=status.HTTP_200_OK)
 async def get_all_products(db: db_dependency):
-    return db.query(Products).all()
+    products = db.query(Products).all()
+
+    result = []
+
+    for product in products:
+        result.append({
+
+            "id": product.id,
+            "name": product.name,
+            "description": product.description,
+            "price": product.price,
+            "category_id": product.category_id,
+            "category_name": product.category.name if product.category else None,
+            "stock_quantity": product.stock_quantity
+        })
+
+    return result
 
 
 @router.get("/filter/price", status_code=status.HTTP_200_OK)
@@ -45,6 +61,40 @@ async def filter_by_category_id(db: db_dependency, category_id: int):
 async def get_by_quantity(db: db_dependency, stock_quantity: int):
     return db.query(Products).filter(Products.stock_quantity == stock_quantity).first()
 
+
+@router.get("/search", status_code=status.HTTP_200_OK)
+async def search_products(
+        db: db_dependency,
+        q: str = Query(..., min_length=1, description="Search by product name"),
+):
+    search_term = f"%{q.lower()}%"
+    products = db.query(Products).filter(
+        Products.name.ilike(search_term)
+    ).all()
+
+    if not products:
+        return {
+            "message": f"No products found for '{q}'",
+            "results": [],
+            "count": 0
+        }
+
+    results = []
+    for product in products:
+        results.append({
+            "id": product.id,
+            "name": product.name,
+            "description": product.description,
+            "price": product.price,
+            "category_id": product.category_id,
+            "category_name": product.category.name if product.category else None,
+            "stock_quantity": product.stock_quantity
+        })
+
+    return {
+        "results": results,
+        "count": len(results)
+    }
 
 
 @router.get("/{product_id}", status_code=status.HTTP_200_OK)

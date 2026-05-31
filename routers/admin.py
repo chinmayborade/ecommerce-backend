@@ -120,3 +120,4 @@ async def delete_product(
     db.delete(product)
     db.commit()
     return {"message": "Product Deleted Successfully"}
+
