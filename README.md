@@ -1,4 +1,4 @@
-# Ecommerce Backend
+# E-Commerce Backend using FastAPI
 
 A FastAPI-based ecommerce backend for managing users, products, categories, cart operations, and orders. It includes JWT-based authentication, role-based access control for users and admins, and SQLAlchemy models for database persistence.
 
