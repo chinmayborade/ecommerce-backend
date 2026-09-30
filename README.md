@@ -1,6 +1,6 @@
 # E-Commerce Backend using FastAPI
 
-A FastAPI-based ecommerce backend for managing users, products, categories, cart operations, and orders. It includes JWT-based authentication, role-based access control for users and admins, and SQLAlchemy models for database persistence.
+A FastAPI-based ecommerce backend for managing users, products, categories, cart operations, and orders. It includes JWT-based authentication, role-based access control for users and admins, and SQLAlchemy integration for database operations.
 
 ## Features
 
@@ -45,6 +45,7 @@ A FastAPI-based ecommerce backend for managing users, products, categories, cart
 │   └── __init__.py
 ├── __init__.py
 ├── .gitignore
+├── LICENSE
 └── README.md
 ```
 
@@ -148,4 +149,4 @@ You can deploy the app to Railway by linking the repository and configuring envi
 
 ## License
 
-This project does not currently include a license file. Add one if you want to publish or distribute the code publicly.
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
